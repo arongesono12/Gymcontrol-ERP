@@ -1,0 +1,7 @@
+{
+  "name": "GymControl ERP",
+  "description": "Comprehensive gym management system for tracking members, payments, and schedules with AI-powered insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
