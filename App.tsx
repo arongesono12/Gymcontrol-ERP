@@ -11,6 +11,8 @@ import { DashboardView } from './src/features/dashboard/DashboardView';
 import { MembersView } from './src/features/members/MembersView';
 import { PaymentsView } from './src/features/payments/PaymentsView';
 
+import { CalendarView } from './src/features/calendar/CalendarView';
+
 // --- App Component ---
 
 const AppContent = () => {
@@ -162,6 +164,7 @@ const AppContent = () => {
         <Route path="/" element={<DashboardView stats={stats} />} />
         <Route path="/members" element={<MembersView members={members} onUpdateMember={handleUpdateMember} onDeleteMember={onDeleteMember} onAddPayment={onAddPayment} />} />
         <Route path="/payments" element={<PaymentsView payments={payments} />} />
+        <Route path="/calendar" element={<CalendarView members={members} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </MainLayout>

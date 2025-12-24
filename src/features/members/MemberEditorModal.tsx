@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save } from 'lucide-react';
-import { Member, MemberStatus, UserRole } from '../../types';
+import { Member, MemberStatus, UserRole, DAYS_OF_WEEK } from '../../types';
 
 interface MemberEditorModalProps {
   isOpen: boolean;
@@ -48,6 +48,31 @@ export const MemberEditorModal: React.FC<MemberEditorModalProps> = ({
               <option value={MemberStatus.INACTIVE}>Inactivo</option>
               <option value={MemberStatus.PENDING}>Pendiente</option>
             </select>
+          </div>
+          <div className="space-y-2">
+            <label className="text-slate-400 font-bold ml-2">Días de Entrenamiento</label>
+            <div className="grid grid-cols-4 gap-2">
+              {DAYS_OF_WEEK.map(day => (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => {
+                     const currentSchedule = formData.schedule || [];
+                     const newSchedule = currentSchedule.includes(day)
+                       ? currentSchedule.filter(d => d !== day)
+                       : [...currentSchedule, day];
+                     setFormData({ ...formData, schedule: newSchedule });
+                  }}
+                  className={`p-2 rounded-xl text-xs font-bold transition-all ${
+                    (formData.schedule || []).includes(day)
+                      ? 'bg-emerald-500 text-white'
+                      : 'bg-slate-950 text-slate-500 border border-slate-800 hover:border-emerald-500/50'
+                  }`}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
           </div>
           <button type="submit" className="w-full bg-emerald-500 text-white font-black py-4 rounded-2xl hover:bg-emerald-400 flex items-center justify-center gap-2 transition-all active:scale-95"><Save size={18} /> Guardar Cambios</button>
         </form>

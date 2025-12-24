@@ -1,18 +1,17 @@
-
 export enum PaymentType {
-  MONTHLY = 'MONTHLY',
-  DAILY = 'DAILY',
+  MONTHLY = "MONTHLY",
+  DAILY = "DAILY",
 }
 
 export enum MemberStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  PENDING = 'PENDING',
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  PENDING = "PENDING",
 }
 
 export enum UserRole {
-  ADMIN = 'ADMIN',
-  MEMBER = 'MEMBER',
+  ADMIN = "ADMIN",
+  MEMBER = "MEMBER",
 }
 
 export interface Member {
@@ -26,10 +25,21 @@ export interface Member {
   plan: string;
   isRecurring?: boolean;
   nextBillingDate?: string;
-  profileImage?: string; 
+  profileImage?: string;
   role: UserRole;
   password?: string;
+  schedule?: string[]; // Array of days e.g., ['Monday', 'Wednesday']
 }
+
+export const DAYS_OF_WEEK = [
+  "Lunes",
+  "Martes",
+  "Miércoles",
+  "Jueves",
+  "Viernes",
+  "Sábado",
+  "Domingo",
+];
 
 export interface Payment {
   id: string;
@@ -64,7 +74,7 @@ export interface AppNotification {
   id: string;
   title: string;
   message: string;
-  type: 'warning' | 'info' | 'error' | 'success';
+  type: "warning" | "info" | "error" | "success";
   timestamp: string;
   read: boolean;
 }

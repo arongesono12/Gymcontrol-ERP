@@ -150,7 +150,10 @@ export const MembersView: React.FC<MembersViewProps> = ({
                   m.status === MemberStatus.ACTIVE ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
                   m.status === MemberStatus.INACTIVE ? 'bg-red-500/10 text-red-400 border-red-500/20' :
                   'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                }`}>{m.status}</span>
+                }`}>
+                  {m.status === MemberStatus.ACTIVE ? 'Activo' : 
+                   m.status === MemberStatus.INACTIVE ? 'Inactivo' : 'Pendiente'}
+                </span>
               </div>
               <h3 className="text-xl font-black text-white truncate">{m.name}</h3>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1 mb-4">{m.plan}</p>
