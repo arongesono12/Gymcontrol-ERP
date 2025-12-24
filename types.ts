@@ -10,6 +10,11 @@ export enum MemberStatus {
   PENDING = 'PENDING',
 }
 
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  MEMBER = 'MEMBER',
+}
+
 export interface Member {
   id: string;
   name: string;
@@ -21,12 +26,14 @@ export interface Member {
   plan: string;
   isRecurring?: boolean;
   nextBillingDate?: string;
-  profileImage?: string; // URL o base64 de la imagen
+  profileImage?: string; 
+  role: UserRole;
+  password?: string; // Simulado para el ejemplo
 }
 
 export interface Payment {
   id: string;
-  memberId: string | null; // null for anonymous daily visitors
+  memberId: string | null;
   memberName: string;
   amount: number;
   date: string;
