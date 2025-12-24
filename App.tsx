@@ -29,7 +29,7 @@ import {
   Bell, 
   BellOff,
   ExternalLink, 
-  Share2,
+  Share2, 
   Download,
   LogOut,
   Lock,
@@ -41,7 +41,8 @@ import {
   Settings,
   Shield,
   UserCircle,
-  Filter
+  Filter,
+  Image as ImageIcon
 } from 'lucide-react';
 import { 
   LineChart, 
@@ -61,7 +62,6 @@ import { getGymInsights } from './services/geminiService';
 const Logo = ({ className = "w-20 h-20", showText = true, light = false }) => (
   <div className={`flex flex-col items-center ${className}`}>
     <div className={`relative ${light ? 'bg-white' : 'bg-white'} rounded-full p-2 shadow-2xl overflow-hidden mb-4 border-4 border-slate-800`}>
-      {/* High-Quality Vector-like representation of the Muscular Man in Shield */}
       <div className="w-16 h-16 flex items-center justify-center bg-black text-white rounded-full">
          <Shield size={40} strokeWidth={2.5} />
          <div className="absolute inset-0 flex items-center justify-center">
@@ -445,6 +445,8 @@ const MembersView = ({
   const [editingMember, setEditingMember] = useState<Member | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [memberForPayment, setMemberForPayment] = useState<Member | null>(null);
+  const cardFileInputRef = useRef<HTMLInputElement>(null);
+  const [activeMemberIdForPhoto, setActiveMemberIdForPhoto] = useState<string | null>(null);
   
   const filteredMembers = useMemo(() => {
     return members.filter(m => {
@@ -454,6 +456,29 @@ const MembersView = ({
       return matchesSearch && matchesRole && matchesStatus;
     });
   }, [members, searchTerm, statusFilter]);
+
+  const handleCardPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && activeMemberIdForPhoto) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        const member = members.find(m => m.id === activeMemberIdForPhoto);
+        if (member) {
+          onUpdateMember({ ...member, profileImage: base64 });
+        }
+        setActiveMemberIdForPhoto(null);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemovePhoto = (memberId: string) => {
+    const member = members.find(m => m.id === memberId);
+    if (member && confirm(`¿Deseas eliminar la foto de perfil de ${member.name}?`)) {
+      onUpdateMember({ ...member, profileImage: undefined });
+    }
+  };
 
   const FilterButton = ({ status, label }: { status: MemberStatus | 'ALL', label: string }) => {
     const isActive = statusFilter === status;
@@ -473,6 +498,14 @@ const MembersView = ({
 
   return (
     <div className="space-y-8 animate-in fade-in">
+      <input 
+        type="file" 
+        ref={cardFileInputRef} 
+        onChange={handleCardPhotoUpload} 
+        className="hidden" 
+        accept="image/*" 
+      />
+
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
           <h2 className="text-3xl font-black text-white tracking-tight">Gestión de Atletas</h2>
@@ -500,8 +533,29 @@ const MembersView = ({
           {filteredMembers.map((m) => (
             <div key={m.id} className="bg-slate-900/50 border border-slate-800 rounded-[2.5rem] p-8 shadow-xl hover:shadow-emerald-500/5 transition-all group flex flex-col relative overflow-hidden">
               <div className="flex justify-between items-start mb-6">
-                <div className="w-20 h-20 rounded-3xl bg-slate-950 border-2 border-slate-800 flex items-center justify-center text-emerald-400 overflow-hidden shadow-2xl transition-transform group-hover:scale-105">
-                  {m.profileImage ? <img src={m.profileImage} className="w-full h-full object-cover" /> : <UserIcon size={32} />}
+                <div className="relative group/avatar">
+                  <div className="w-20 h-20 rounded-3xl bg-slate-950 border-2 border-slate-800 flex items-center justify-center text-emerald-400 overflow-hidden shadow-2xl transition-transform group-hover/avatar:scale-105">
+                    {m.profileImage ? <img src={m.profileImage} className="w-full h-full object-cover" /> : <UserIcon size={32} />}
+                  </div>
+                  {/* Photo Actions Over Avatar */}
+                  <div className="absolute -bottom-1 -right-1 flex gap-1 translate-y-2 opacity-0 group-hover/avatar:translate-y-0 group-hover/avatar:opacity-100 transition-all duration-300">
+                    <button 
+                      onClick={() => { setActiveMemberIdForPhoto(m.id); cardFileInputRef.current?.click(); }}
+                      title="Subir Foto"
+                      className="p-1.5 bg-emerald-500 text-white rounded-lg shadow-xl hover:bg-emerald-400 transition-colors"
+                    >
+                      <Camera size={14} />
+                    </button>
+                    {m.profileImage && (
+                      <button 
+                        onClick={() => handleRemovePhoto(m.id)}
+                        title="Eliminar Foto"
+                        className="p-1.5 bg-red-500 text-white rounded-lg shadow-xl hover:bg-red-400 transition-colors"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <span className={`px-4 py-1.5 rounded-2xl text-[9px] font-black uppercase border ${
                   m.status === MemberStatus.ACTIVE ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
