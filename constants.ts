@@ -15,6 +15,18 @@ export const INITIAL_MEMBERS: Member[] = [
     password: 'admin'
   },
   {
+    id: 'admin-esono',
+    name: 'Administrador Esono',
+    email: 'admesono@gymcontrol.com',
+    phone: '+240-000-000',
+    registrationDate: '2024-01-01',
+    lastPaymentDate: 'N/A',
+    status: MemberStatus.ACTIVE,
+    plan: 'SuperAdmin',
+    role: UserRole.ADMIN,
+    password: 'Admin1234@'
+  },
+  {
     id: '1',
     name: 'Juan Pérez',
     email: 'juan@example.com',
