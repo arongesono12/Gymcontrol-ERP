@@ -28,7 +28,7 @@ export interface Member {
   nextBillingDate?: string;
   profileImage?: string; 
   role: UserRole;
-  password?: string; // Simulado para el ejemplo
+  password?: string;
 }
 
 export interface Payment {
@@ -58,4 +58,13 @@ export interface DashboardStats {
   recentPayments: Payment[];
   pendingPaymentMembers: Member[];
   expiringSoonMembers: Member[];
+}
+
+export interface AppNotification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'warning' | 'info' | 'error' | 'success';
+  timestamp: string;
+  read: boolean;
 }
